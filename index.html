@@ -1,480 +1,642 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="de">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>مصطلحات التمريض بالألمانية - B2</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+<title>Deutsch Lernapp</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --cream: #fdf6ec;
-    --red: #c0392b;
-    --dark: #1a1a2e;
-    --gold: #d4a017;
-    --green: #27ae60;
-    --card-bg: #ffffff;
-    --shadow: 0 8px 32px rgba(26,26,46,0.13);
-  }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body {
-    background: var(--cream);
-    font-family: 'Cairo', sans-serif;
-    min-height: 100vh;
-    display: flex; flex-direction: column; align-items: center;
-    padding: 20px 10px 60px;
-  }
-  header { text-align: center; margin-bottom: 28px; animation: fadeDown .7s ease both; }
-  header h1 { font-family: 'Playfair Display', serif; font-size: clamp(1.5rem,5vw,2.4rem); color: var(--dark); }
-  header p { color: #666; font-size: .93rem; margin-top: 6px; }
-  .flag { font-size: 2rem; margin-bottom: 6px; }
+:root{
+  --bg:#0c0c10;--s1:#13131a;--s2:#1c1c27;--border:#26263a;
+  --green:#22c55e;--red:#ef4444;--gold:#f59e0b;--blue:#60a5fa;--purple:#a78bfa;
+  --text:#ededf5;--muted:#6b6b90;--r:14px;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min-height:100vh;display:flex;justify-content:center;}
+.blob{position:fixed;border-radius:50%;filter:blur(90px);pointer-events:none;z-index:0;opacity:.45;}
+.blob1{width:420px;height:420px;background:radial-gradient(circle,rgba(34,197,94,.16),transparent 70%);top:-120px;left:-80px;}
+.blob2{width:340px;height:340px;background:radial-gradient(circle,rgba(167,139,250,.14),transparent 70%);bottom:-80px;right:-60px;}
+.wrap{width:100%;max-width:700px;padding:28px 16px 70px;position:relative;z-index:1;}
 
-  .tabs {
-    display: flex; gap: 8px; flex-wrap: wrap; justify-content: center;
-    margin-bottom: 28px; animation: fadeUp .5s .2s ease both;
-  }
-  .tab {
-    padding: 8px 18px; border-radius: 30px; border: 2px solid var(--dark);
-    background: transparent; color: var(--dark); font-family: 'Cairo', sans-serif;
-    font-size: .88rem; font-weight: 700; cursor: pointer; transition: all .2s;
-  }
-  .tab.active, .tab:hover { background: var(--dark); color: var(--cream); }
+/* HEADER */
+header{text-align:center;margin-bottom:28px;}
+header h1{font-family:'Syne',sans-serif;font-weight:800;font-size:clamp(1.7rem,5vw,2.6rem);letter-spacing:-1px;background:linear-gradient(135deg,#ededf5 40%,#6b6b90);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+header p{color:var(--muted);font-size:.85rem;margin-top:4px;font-weight:300;}
 
-  /* ========== FLASHCARD ========== */
-  #flashcard-section { width:100%; max-width:540px; animation: fadeUp .5s ease both; }
-  .progress-bar-wrap { background:#e0d9cf; border-radius:10px; height:7px; margin-bottom:16px; overflow:hidden; }
-  .progress-bar { height:100%; background:linear-gradient(90deg,var(--red),var(--gold)); border-radius:10px; transition:width .4s ease; }
+/* MAIN TABS */
+.main-tabs{display:flex;background:var(--s1);border:1px solid var(--border);border-radius:12px;padding:5px;gap:6px;margin-bottom:28px;}
+.main-tab{flex:1;padding:11px 10px;border-radius:9px;border:none;background:transparent;color:var(--muted);font-family:'Syne',sans-serif;font-size:.82rem;font-weight:700;cursor:pointer;transition:all .2s;letter-spacing:.3px;}
+.main-tab.active{background:var(--s2);color:var(--text);border:1px solid var(--border);}
+.main-tab:hover:not(.active){color:var(--text);}
 
-  .flashcard-container { perspective:1200px; min-height:360px; margin-bottom:18px; cursor:pointer; }
-  .flashcard { width:100%; height:100%; min-height:360px; position:relative; transform-style:preserve-3d; transition:transform .6s cubic-bezier(.4,0,.2,1); }
-  .flashcard.flipped { transform: rotateY(180deg); }
-  .card-face {
-    position:absolute; inset:0; min-height:360px; border-radius:22px;
-    display:flex; flex-direction:column; align-items:center; justify-content:center;
-    padding:28px 26px; backface-visibility:hidden; box-shadow:var(--shadow);
-  }
-  .card-front { background:var(--dark); color:var(--cream); }
-  .card-back { background:var(--card-bg); color:var(--dark); transform:rotateY(180deg); border:2.5px solid var(--gold); }
-  .card-category-badge {
-    position:absolute; top:14px; left:14px; background:var(--gold);
-    color:var(--dark); border-radius:20px; padding:3px 12px; font-size:.72rem; font-weight:700;
-  }
-  .card-label { font-size:.72rem; letter-spacing:2px; text-transform:uppercase; opacity:.45; margin-bottom:10px; }
-  .card-word { font-size:clamp(1.5rem,4vw,2.1rem); font-weight:700; text-align:center; margin-bottom:10px; }
-  .card-sentence {
-    font-size:.88rem; text-align:center; line-height:1.7; opacity:.85;
-    background:rgba(255,255,255,.08); border-radius:10px; padding:10px 14px; margin-top:4px;
-  }
-  .card-back .card-sentence { background:#f5efe4; }
-  .card-tap { font-size:.75rem; opacity:.35; margin-top:16px; }
-  .card-nav { display:flex; gap:12px; justify-content:center; align-items:center; margin-bottom:12px; }
-  .nav-btn {
-    width:48px; height:48px; border-radius:50%; border:2px solid var(--dark);
-    background:transparent; color:var(--dark); font-size:1.3rem; cursor:pointer; transition:all .18s;
-    display:flex; align-items:center; justify-content:center;
-  }
-  .nav-btn:hover { background:var(--dark); color:var(--cream); }
-  .card-counter { font-weight:700; color:#888; font-size:.9rem; min-width:60px; text-align:center; }
+/* SECTIONS */
+.section{display:none;}
+.section.active{display:block;}
 
-  /* ========== QUIZ ========== */
-  #quiz-section { width:100%; max-width:540px; display:none; animation: fadeUp .5s ease both; }
-  .quiz-score { text-align:center; font-size:1rem; color:#555; margin-bottom:14px; }
-  .quiz-question {
-    background:var(--dark); color:var(--cream); border-radius:18px;
-    padding:24px; margin-bottom:18px; box-shadow:var(--shadow); text-align:center;
-  }
-  .quiz-question .q-label { font-size:.72rem; letter-spacing:2px; opacity:.45; margin-bottom:8px; }
-  .quiz-question .q-word { font-size:clamp(1.3rem,4vw,1.9rem); font-weight:700; margin-bottom:10px; }
-  .quiz-question .q-sentence { font-size:.85rem; opacity:.7; font-style:italic; line-height:1.6; }
-  .quiz-options { display:grid; grid-template-columns:1fr 1fr; gap:11px; margin-bottom:18px; }
-  .quiz-opt {
-    background:var(--card-bg); border:2px solid #e0d9cf; border-radius:14px;
-    padding:13px 10px; font-family:'Cairo',sans-serif; font-size:.88rem; font-weight:600;
-    color:var(--dark); cursor:pointer; transition:all .18s; text-align:center;
-  }
-  .quiz-opt:hover { border-color:var(--dark); background:#f5efe4; }
-  .quiz-opt.correct { background:#d5f5e3; border-color:var(--green); color:var(--green); }
-  .quiz-opt.wrong { background:#fde8e8; border-color:var(--red); color:var(--red); }
+/* ============ QUIZ SECTION ============ */
+.scorebar{display:flex;gap:8px;justify-content:center;margin-bottom:22px;flex-wrap:wrap;}
+.score-chip{padding:5px 16px;border-radius:20px;font-size:.8rem;font-weight:600;border:1px solid;letter-spacing:.3px;}
+.chip-round{border-color:var(--blue);color:var(--blue);background:rgba(96,165,250,.08);}
+.chip-ok{border-color:var(--green);color:var(--green);background:rgba(34,197,94,.08);}
+.chip-bad{border-color:var(--red);color:var(--red);background:rgba(239,68,68,.08);}
 
-  /* ========== LIST ========== */
-  #list-section { width:100%; max-width:580px; display:none; animation: fadeUp .5s ease both; }
-  .list-category { margin-bottom:24px; }
-  .list-cat-title { font-size:1rem; font-weight:700; color:var(--red); border-bottom:2px solid var(--gold); padding-bottom:6px; margin-bottom:12px; }
-  .list-item {
-    background:var(--card-bg); border-radius:14px; padding:14px 18px;
-    margin-bottom:10px; box-shadow:0 2px 10px rgba(0,0,0,.07);
-  }
-  .list-de { font-weight:700; color:var(--dark); font-size:1rem; margin-bottom:4px; }
-  .list-ar { color:#444; font-size:.9rem; margin-bottom:6px; }
-  .list-example { font-size:.83rem; color:#888; font-style:italic; border-right:3px solid var(--gold); padding-right:10px; line-height:1.6; }
+.prog-wrap{margin-bottom:26px;}
+.prog-label{display:flex;justify-content:space-between;font-size:.76rem;color:var(--muted);margin-bottom:6px;}
+.prog-bar{height:3px;background:var(--border);border-radius:3px;overflow:hidden;}
+.prog-fill{height:100%;border-radius:3px;transition:width .4s ease;}
+.pf-quiz{background:linear-gradient(90deg,var(--green),var(--gold));}
+.pf-cards{background:linear-gradient(90deg,var(--blue),var(--purple));}
 
-  /* ========== INTERVIEW ========== */
-  #interview-section { width:100%; max-width:600px; display:none; animation: fadeUp .5s ease both; }
-  #interview-section h3 { text-align:center; margin-bottom:22px; color:var(--dark); font-size:1.2rem; }
-  .interview-card {
-    background:var(--card-bg); border-radius:18px; padding:22px;
-    margin-bottom:18px; box-shadow:var(--shadow); border-right:5px solid var(--gold);
-  }
-  .interview-badge {
-    font-size:.72rem; background:var(--dark); color:var(--cream);
-    border-radius:20px; padding:3px 12px; margin-bottom:12px; display:inline-block;
-  }
-  .interview-q-de { font-weight:700; color:var(--dark); font-size:1rem; margin-bottom:8px; }
-  .interview-q-ar { color:#888; font-size:.85rem; margin-bottom:14px; }
-  .interview-a-de {
-    background:#f5efe4; border-radius:12px; padding:13px 16px;
-    font-size:.9rem; line-height:1.8; color:#222; margin-bottom:8px; font-style:italic;
-  }
-  .interview-a-ar { color:#777; font-size:.83rem; line-height:1.7; }
-  .interview-tip {
-    background:#eafaf1; border-radius:10px; padding:10px 14px;
-    font-size:.82rem; color:#27ae60; margin-top:10px; border-right:3px solid var(--green);
-  }
+.question-card{background:var(--s1);border:1px solid var(--border);border-radius:var(--r);padding:26px 22px;margin-bottom:18px;animation:fadeUp .35s ease;}
+.q-num{font-family:'Syne',sans-serif;font-size:.7rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:14px;}
+.q-topic{font-family:'Syne',sans-serif;font-size:clamp(1.1rem,3vw,1.45rem);font-weight:700;line-height:1.3;color:var(--text);}
 
-  @keyframes fadeDown { from{opacity:0;transform:translateY(-22px)} to{opacity:1;transform:translateY(0)} }
-  @keyframes fadeUp { from{opacity:0;transform:translateY(18px)} to{opacity:1;transform:translateY(0)} }
-  @keyframes pop { 0%{transform:scale(1)} 40%{transform:scale(1.04)} 100%{transform:scale(1)} }
-  .pop { animation: pop .3s ease; }
+.step-label{font-size:.72rem;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:10px;}
+.rf-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.rf-btn{padding:16px 10px;border-radius:11px;border:2px solid var(--border);background:var(--s2);cursor:pointer;font-family:'Syne',sans-serif;font-weight:700;font-size:1rem;transition:all .18s;display:flex;flex-direction:column;align-items:center;gap:5px;}
+.rf-btn span.icon{font-size:1.5rem;}
+.rf-btn span.lbl{font-size:.72rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;}
+.rf-btn.btn-r{color:var(--green);}
+.rf-btn.btn-r:hover{border-color:var(--green);background:rgba(34,197,94,.1);}
+.rf-btn.btn-f{color:var(--red);}
+.rf-btn.btn-f:hover{border-color:var(--red);background:rgba(239,68,68,.1);}
+.rf-btn.selected-correct{border-color:var(--green);background:rgba(34,197,94,.12);}
+.rf-btn.selected-wrong{border-color:var(--red);background:rgba(239,68,68,.12);}
+.rf-btn:disabled{cursor:default;opacity:.5;}
+
+.step2{margin-top:18px;display:none;}
+.step2.visible{display:block;animation:fadeUp .3s ease;}
+.options-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;}
+@media(max-width:460px){.options-grid{grid-template-columns:1fr;}}
+.opt-btn{padding:13px 13px;border-radius:10px;border:1px solid var(--border);background:var(--s2);color:var(--text);font-family:'DM Sans',sans-serif;font-size:.86rem;text-align:left;cursor:pointer;transition:all .18s;line-height:1.4;}
+.opt-btn:hover:not(:disabled){border-color:var(--muted);background:#20202e;}
+.opt-btn.correct{border-color:var(--green);background:rgba(34,197,94,.1);color:var(--green);font-weight:500;}
+.opt-btn.wrong{border-color:var(--red);background:rgba(239,68,68,.1);color:var(--red);}
+.opt-btn:disabled{cursor:default;}
+
+.feedback{text-align:center;min-height:24px;font-size:.86rem;font-weight:600;margin-top:12px;transition:all .2s;}
+.fb-ok{color:var(--green);}
+.fb-bad{color:var(--red);}
+
+.next-btn{display:none;width:100%;padding:13px;margin-top:12px;border-radius:11px;border:1px solid rgba(245,158,11,.35);background:rgba(245,158,11,.08);color:var(--gold);font-family:'Syne',sans-serif;font-weight:700;font-size:.92rem;cursor:pointer;transition:all .2s;letter-spacing:.3px;}
+.next-btn:hover{background:rgba(245,158,11,.15);}
+.next-btn.vis{display:block;}
+
+.result-card{display:none;background:var(--s1);border:1px solid var(--border);border-radius:var(--r);padding:40px 24px;text-align:center;animation:fadeUp .4s ease;}
+.result-card.vis{display:block;}
+.result-icon{font-size:3rem;margin-bottom:12px;}
+.result-title{font-family:'Syne',sans-serif;font-weight:800;font-size:1.8rem;margin-bottom:5px;}
+.result-pct{font-family:'Syne',sans-serif;font-size:3.8rem;font-weight:800;background:linear-gradient(135deg,var(--green),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin:10px 0;}
+.result-sub{color:var(--muted);font-size:.88rem;margin-bottom:24px;}
+.restart-btn{padding:12px 32px;border-radius:11px;border:1px solid var(--gold);background:rgba(245,158,11,.08);color:var(--gold);font-family:'Syne',sans-serif;font-weight:700;font-size:.92rem;cursor:pointer;transition:all .2s;}
+.restart-btn:hover{background:rgba(245,158,11,.16);}
+
+/* ============ KARTEIKARTEN SECTION ============ */
+.card-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:9px;}
+.card-counter{font-family:'Syne',sans-serif;font-size:.78rem;font-weight:700;color:var(--muted);letter-spacing:.5px;}
+.shuffle-btn{padding:5px 14px;border-radius:20px;border:1px solid var(--purple);background:rgba(167,139,250,.08);color:var(--purple);font-family:'Syne',sans-serif;font-size:.73rem;font-weight:700;cursor:pointer;transition:all .2s;}
+.shuffle-btn:hover{background:rgba(167,139,250,.16);}
+
+.fc-wrap{perspective:1400px;cursor:pointer;margin-bottom:20px;user-select:none;}
+.fc{width:100%;position:relative;transform-style:preserve-3d;transition:transform .6s cubic-bezier(.4,0,.2,1);border-radius:var(--r);height:300px;}
+.fc.flipped{transform:rotateY(180deg);}
+.face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:var(--r);border:1px solid var(--border);}
+.fc-front{background:var(--s1);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px 24px;text-align:center;}
+.fc-back{background:var(--s2);transform:rotateY(180deg);display:flex;flex-direction:column;padding:24px 22px;overflow:hidden;}
+
+.th-num{font-family:'Syne',sans-serif;font-size:.68rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:10px;}
+.th-title{font-family:'Syne',sans-serif;font-size:clamp(1.25rem,3.5vw,1.8rem);font-weight:800;line-height:1.25;color:var(--text);margin-bottom:18px;}
+.flip-hint{font-size:.76rem;color:var(--muted);font-weight:300;}
+
+.back-label{font-family:'Syne',sans-serif;font-size:.66rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:12px;}
+.ans-list{display:flex;flex-direction:column;gap:6px;overflow-y:auto;flex:1;}
+.ans-item{display:flex;align-items:flex-start;gap:9px;padding:8px 11px;border-radius:9px;background:var(--s1);border:1px solid var(--border);}
+.ans-num{font-family:'Syne',sans-serif;font-size:.68rem;font-weight:700;color:var(--blue);min-width:20px;padding-top:1px;}
+.ans-text{font-size:.84rem;line-height:1.4;color:var(--text);}
+
+.card-nav{display:flex;gap:9px;justify-content:center;}
+.nav-btn{padding:10px 26px;border-radius:10px;border:1px solid var(--border);background:var(--s1);color:var(--text);font-family:'Syne',sans-serif;font-size:.85rem;font-weight:700;cursor:pointer;transition:all .18s;}
+.nav-btn:hover:not(:disabled){background:var(--s2);border-color:var(--muted);}
+.nav-btn:disabled{opacity:.25;cursor:default;}
+.nav-btn.prim{border-color:rgba(96,165,250,.4);background:rgba(96,165,250,.07);color:var(--blue);}
+.nav-btn.prim:hover:not(:disabled){background:rgba(96,165,250,.14);}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(13px);}to{opacity:1;transform:translateY(0);}}
 </style>
 </head>
 <body>
+<div class="blob blob1"></div>
+<div class="blob blob2"></div>
+<div class="wrap">
 
 <header>
-  <div class="flag">🇩🇪🏥</div>
-  <h1>مصطلحات التمريض — مستوى B2</h1>
-  <p>إجابات كاملة ومفصّلة للتحضير لمقابلة Ausbildung Pflegefachmann</p>
+  <h1>Deutsch Lernapp</h1>
+  <p>Quiz · Richtig &amp; Falsch &nbsp;|&nbsp; Karteikarten · Teil 2 &amp; Teil 3</p>
 </header>
 
-<div class="tabs">
-  <button class="tab active" onclick="switchTab('flashcard')">📇 بطاقات تعليمية</button>
-  <button class="tab" onclick="switchTab('quiz')">🧪 اختبار نفسك</button>
-  <button class="tab" onclick="switchTab('list')">📋 قائمة الكلمات</button>
-  <button class="tab" onclick="switchTab('interview')">🎤 المقابلة كاملة</button>
+<!-- MAIN TABS -->
+<div class="main-tabs">
+  <button class="main-tab active" onclick="switchSection('quiz')">📝 Quiz T1</button>
+  <button class="main-tab" onclick="switchSection('cards')">🃏 Karten T2</button>
+  <button class="main-tab" onclick="switchSection('cards3')">🃏 Karten T3</button>
+  <button class="main-tab" onclick="switchSection('cards4')">🃏 Karten T4</button>
 </div>
 
-<div id="flashcard-section">
-  <div class="progress-bar-wrap"><div class="progress-bar" id="progress-bar"></div></div>
-  <div class="flashcard-container" onclick="flipCard()">
-    <div class="flashcard" id="flashcard">
-      <div class="card-face card-front">
-        <div class="card-category-badge" id="fc-category"></div>
-        <div class="card-label">الكلمة بالألمانية</div>
-        <div class="card-word" id="fc-de"></div>
-        <div class="card-sentence" id="fc-sentence-de"></div>
-        <div class="card-tap">👆 اضغط لترى الترجمة الكاملة</div>
+<!-- ===== QUIZ SECTION ===== -->
+<div id="sec-quiz" class="section active">
+
+  <div class="scorebar">
+    <div class="score-chip chip-round" id="q-chip-round">Runde 1</div>
+    <div class="score-chip chip-ok" id="q-chip-ok">✅ 0</div>
+    <div class="score-chip chip-bad" id="q-chip-bad">❌ 0</div>
+  </div>
+
+  <div class="prog-wrap">
+    <div class="prog-label">
+      <span id="q-prog-text">Frage 1 von 10</span>
+      <span id="q-prog-pct">0%</span>
+    </div>
+    <div class="prog-bar"><div class="prog-fill pf-quiz" id="q-prog-fill" style="width:0%"></div></div>
+  </div>
+
+  <div id="quiz-area"></div>
+
+  <div class="result-card" id="q-result">
+    <div class="result-icon" id="q-res-icon">🎉</div>
+    <div class="result-title">Runde beendet!</div>
+    <div class="result-pct" id="q-res-pct">80%</div>
+    <div class="result-sub" id="q-res-sub"></div>
+    <button class="restart-btn" onclick="nextRound()">▶ Nächste Runde</button>
+  </div>
+
+</div>
+
+<!-- ===== KARTEIKARTEN SECTION ===== -->
+<div id="sec-cards" class="section">
+
+  <div class="card-top">
+    <span class="card-counter" id="c-counter">1 / 8</span>
+    <button class="shuffle-btn" onclick="doShuffle()">⇌ Shuffle</button>
+  </div>
+  <div class="prog-wrap" style="margin-bottom:20px;">
+    <div class="prog-bar"><div class="prog-fill pf-cards" id="c-prog-fill" style="width:12.5%"></div></div>
+  </div>
+
+  <div class="fc-wrap" id="fc-wrap" onclick="flipCard()">
+    <div class="fc" id="fc">
+      <div class="face fc-front">
+        <div class="th-num" id="th-num">Thema 1</div>
+        <div class="th-title" id="th-title">—</div>
+        <div class="flip-hint">👆 Tippen um Antworten zu sehen</div>
       </div>
-      <div class="card-face card-back">
-        <div class="card-label">الترجمة والشرح</div>
-        <div class="card-word" id="fc-ar"></div>
-        <div class="card-sentence" id="fc-sentence-ar"></div>
+      <div class="face fc-back">
+        <div class="back-label">Antworten</div>
+        <div class="ans-list" id="ans-list"></div>
       </div>
     </div>
   </div>
+
   <div class="card-nav">
-    <button class="nav-btn" onclick="prevCard()">&#8592;</button>
-    <span class="card-counter" id="fc-counter">1 / 1</span>
-    <button class="nav-btn" onclick="nextCard()">&#8594;</button>
+    <button class="nav-btn" id="c-prev" onclick="prevCard()" disabled>← Zurück</button>
+    <button class="nav-btn prim" id="c-next" onclick="nextCard()">Weiter →</button>
   </div>
+
 </div>
 
-<div id="quiz-section">
-  <div class="quiz-score">✅ النتيجة: <strong id="quiz-score">0</strong> / <span id="quiz-total">0</span></div>
-  <div class="quiz-question">
-    <div class="q-label">ترجم هذه الكلمة</div>
-    <div class="q-word" id="quiz-word"></div>
-    <div class="q-sentence" id="quiz-sentence"></div>
+<!-- ===== KARTEIKARTEN SECTION TEIL 3 ===== -->
+<div id="sec-cards3" class="section">
+
+  <div class="card-top">
+    <span class="card-counter" id="c3-counter">1 / 6</span>
+    <button class="shuffle-btn" onclick="doShuffle3()">⇌ Shuffle</button>
   </div>
-  <div class="quiz-options" id="quiz-options"></div>
+  <div class="prog-wrap" style="margin-bottom:20px;">
+    <div class="prog-bar"><div class="prog-fill" style="background:linear-gradient(90deg,var(--gold),var(--red));width:16.6%" id="c3-prog-fill"></div></div>
+  </div>
+
+  <div class="fc-wrap" id="fc3-wrap" onclick="flipCard3()">
+    <div class="fc" id="fc3">
+      <div class="face fc-front">
+        <div class="th-num" id="th3-num">Thema 1</div>
+        <div class="th-title" id="th3-title">—</div>
+        <div class="flip-hint">👆 Tippen um Antworten zu sehen</div>
+      </div>
+      <div class="face fc-back">
+        <div class="back-label">Antworten</div>
+        <div class="ans-list" id="ans3-list"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card-nav">
+    <button class="nav-btn" id="c3-prev" onclick="prevCard3()" disabled>← Zurück</button>
+    <button class="nav-btn prim" id="c3-next" onclick="nextCard3()">Weiter →</button>
+  </div>
+
 </div>
 
-<div id="list-section"></div>
-<div id="interview-section"></div>
+<!-- ===== KARTEIKARTEN SECTION TEIL 4 ===== -->
+<div id="sec-cards4" class="section">
+
+  <div class="card-top">
+    <span class="card-counter" id="c4-counter">1 / 5</span>
+    <button class="shuffle-btn" onclick="doShuffle4()">⇌ Shuffle</button>
+  </div>
+  <div class="prog-wrap" style="margin-bottom:20px;">
+    <div class="prog-bar"><div class="prog-fill" style="background:linear-gradient(90deg,var(--purple),var(--blue));width:20%" id="c4-prog-fill"></div></div>
+  </div>
+
+  <div class="fc-wrap" id="fc4-wrap" onclick="flipCard4()">
+    <div class="fc" id="fc4">
+      <div class="face fc-front">
+        <div class="th-num" id="th4-num">Thema 1</div>
+        <div class="th-title" id="th4-title">—</div>
+        <div class="flip-hint">👆 Tippen um Antworten zu sehen</div>
+      </div>
+      <div class="face fc-back">
+        <div class="back-label">Antworten (1–8)</div>
+        <div class="ans-list" id="ans4-list"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card-nav">
+    <button class="nav-btn" id="c4-prev" onclick="prevCard4()" disabled>← Zurück</button>
+    <button class="nav-btn prim" id="c4-next" onclick="nextCard4()">Weiter →</button>
+  </div>
+
+</div>
+
+</div><!-- wrap -->
 
 <script>
-const vocab = [
-  // أدوات
-  {
-    de: "die Spritze", ar: "الحقنة / المحقنة", cat: "🩺 أدوات",
-    sentence_de: "Die Krankenschwester bereitet die Spritze vor, um dem Patienten das Medikament intramuskulär zu injizieren.",
-    sentence_ar: "تحضّر الممرضة الحقنة لإعطاء الدواء للمريض عن طريق الحقن العضلي."
-  },
-  {
-    de: "der Verband", ar: "الضمادة / التضميد", cat: "🩺 أدوات",
-    sentence_de: "Nach der Operation muss der Verband täglich gewechselt werden, um eine Infektion zu vermeiden.",
-    sentence_ar: "بعد العملية، يجب تغيير الضمادة يومياً لتجنب الالتهاب."
-  },
-  {
-    de: "der Tropf / die Infusion", ar: "التقطير الوريدي / السيروم", cat: "🩺 أدوات",
-    sentence_de: "Der Patient bekommt einen Tropf mit Kochsalzlösung, weil er stark dehydriert ist und nicht selbst trinken kann.",
-    sentence_ar: "يتلقى المريض تقطيراً وريدياً بمحلول ملحي لأنه يعاني من جفاف شديد ولا يستطيع الشرب بنفسه."
-  },
-  {
-    de: "der Katheter", ar: "القثطار / أنبوب الصرف", cat: "🩺 أدوات",
-    sentence_de: "Bei einem Dauerkatheter muss die Pflegefachkraft täglich die Eintrittsstelle reinigen und auf Zeichen einer Entzündung achten.",
-    sentence_ar: "عند استخدام قثطار دائم، على الممرض تنظيف موضع الإدخال يومياً ومراقبة علامات الالتهاب."
-  },
-  {
-    de: "das Stethoskop", ar: "السماعة الطبية", cat: "🩺 أدوات",
-    sentence_de: "Mit dem Stethoskop kann der Arzt die Herzgeräusche und die Lungengeräusche des Patienten abhören und beurteilen.",
-    sentence_ar: "بواسطة السماعة الطبية يستطيع الطبيب الاستماع إلى أصوات القلب والرئتين وتقييمها."
-  },
-  // أعراض
-  {
-    de: "der Schmerz", ar: "الألم", cat: "🤒 أعراض",
-    sentence_de: "Die Pflegefachkraft fragt den Patienten nach der Intensität des Schmerzes auf einer Skala von 1 bis 10 und dokumentiert die Angaben sorgfältig.",
-    sentence_ar: "يسأل الممرض المريض عن شدة الألم على مقياس من 1 إلى 10 ويوثّق المعلومات بعناية."
-  },
-  {
-    de: "der Blutdruck", ar: "ضغط الدم", cat: "🤒 أعراض",
-    sentence_de: "Beim hypertensiven Patienten wird der Blutdruck mehrmals täglich gemessen und in der Patientenakte dokumentiert.",
-    sentence_ar: "عند مريض ارتفاع ضغط الدم، يُقاس الضغط عدة مرات يومياً ويُوثَّق في ملف المريض."
-  },
-  {
-    de: "die Wunde", ar: "الجرح", cat: "🤒 أعراض",
-    sentence_de: "Eine chronische Wunde muss regelmäßig gereinigt, auf Heilungsfortschritt beurteilt und mit einem geeigneten Verband versorgt werden.",
-    sentence_ar: "يجب تنظيف الجرح المزمن بانتظام وتقييم مدى تقدم التئامه وتضميده بضمادة مناسبة."
-  },
-  {
-    de: "die Atemnot", ar: "ضيق التنفس / صعوبة التنفس", cat: "🤒 أعراض",
-    sentence_de: "Bei akuter Atemnot legt die Pflegekraft den Patienten in eine halbsitzende Position und benachrichtigt sofort den zuständigen Arzt.",
-    sentence_ar: "عند ضيق التنفس الحاد، يضع الممرض المريض في وضعية شبه جلوسية وينبّه الطبيب المسؤول فوراً."
-  },
-  {
-    de: "die Bewusstlosigkeit", ar: "فقدان الوعي", cat: "🤒 أعراض",
-    sentence_de: "Bei Bewusstlosigkeit überprüft die Pflegefachkraft zuerst die Atmung, ruft den Notarzt und beginnt gegebenenfalls mit der Reanimation.",
-    sentence_ar: "عند فقدان الوعي، يتحقق الممرض أولاً من التنفس ويستدعي طبيب الطوارئ ويبدأ الإنعاش إذا لزم الأمر."
-  },
-  // إجراءات
-  {
-    de: "die Wundversorgung", ar: "تضميد الجرح / العناية بالجرح", cat: "💉 إجراءات",
-    sentence_de: "Bei der Wundversorgung trägt die Pflegefachkraft sterile Handschuhe, reinigt die Wunde mit NaCl-Lösung und wählt den passenden Wundverband aus.",
-    sentence_ar: "عند تضميد الجرح، يلبس الممرض قفازات معقمة ويُنظف الجرح بمحلول NaCl ويختار الضمادة المناسبة."
-  },
-  {
-    de: "Blut abnehmen", ar: "سحب الدم / أخذ عينة دم", cat: "💉 إجراءات",
-    sentence_de: "Vor dem Blutabnehmen erklärt die Pflegefachkraft dem Patienten den Ablauf, legt die Staumanschette an und desinfiziert die Einstichstelle sorgfältig.",
-    sentence_ar: "قبل سحب الدم، يشرح الممرض للمريض خطوات الإجراء ويضع رباط الضغط ويعقّم مكان الإبرة بعناية."
-  },
-  {
-    de: "die Vitalzeichen", ar: "العلامات الحيوية", cat: "💉 إجراءات",
-    sentence_de: "Zu den Vitalzeichen gehören Blutdruck, Pulsfrequenz, Körpertemperatur, Atemfrequenz und Sauerstoffsättigung, die regelmäßig überwacht werden müssen.",
-    sentence_ar: "تشمل العلامات الحيوية ضغط الدم، معدل النبض، درجة حرارة الجسم، معدل التنفس وتشبع الأكسجين، ويجب مراقبتها بانتظام."
-  },
-  {
-    de: "die Dokumentation", ar: "التوثيق / تسجيل المعلومات", cat: "💉 إجراءات",
-    sentence_de: "Eine lückenlose und genaue Dokumentation ist rechtlich verpflichtend und dient der Kommunikation zwischen allen Berufsgruppen im Pflegeteam.",
-    sentence_ar: "التوثيق الكامل والدقيق إلزامي قانونياً ويُستخدم للتواصل بين جميع المهن ضمن فريق التمريض."
-  },
-  {
-    de: "die Übergabe", ar: "تسليم المناوبة / تسليم الوردية", cat: "💉 إجراءات",
-    sentence_de: "Bei der Schichtübergabe informiert die Pflegefachkraft das ablösende Team über den aktuellen Zustand jedes Patienten, besondere Vorkommnisse und geplante Maßnahmen.",
-    sentence_ar: "عند تسليم المناوبة، يُبلغ الممرض الفريق البديل عن الحالة الراهنة لكل مريض والأحداث الخاصة والتدابير المخطط لها."
-  },
-  // أقسام
-  {
-    de: "die Notaufnahme", ar: "قسم الطوارئ", cat: "🏥 أقسام",
-    sentence_de: "In der Notaufnahme werden Patienten nach dem Triage-System beurteilt, wobei lebensbedrohliche Fälle sofort behandelt werden.",
-    sentence_ar: "في قسم الطوارئ يُقيَّم المرضى وفق نظام الفرز، حيث تُعالَج الحالات المهددة للحياة فوراً."
-  },
-  {
-    de: "die Intensivstation (ITS)", ar: "وحدة العناية المركزة", cat: "🏥 أقسام",
-    sentence_de: "Auf der Intensivstation werden schwerstkranke Patienten rund um die Uhr überwacht und erhalten eine intensive medizinische und pflegerische Versorgung.",
-    sentence_ar: "في وحدة العناية المركزة يُراقَب المرضى الحرجون على مدار الساعة ويتلقون رعاية طبية وتمريضية مكثفة."
-  },
-  {
-    de: "die Geriatrie", ar: "طب وتمريض المسنين", cat: "🏥 أقسام",
-    sentence_de: "In der Geriatrie werden ältere Menschen mit mehreren gleichzeitigen Erkrankungen behandelt, wobei die Erhaltung der Selbstständigkeit im Vordergrund steht.",
-    sentence_ar: "في طب المسنين يُعالَج كبار السن الذين يعانون من أمراض متعددة في آن واحد، مع التركيز على الحفاظ على استقلاليتهم."
-  },
-  // مهن
-  {
-    de: "die Pflegefachkraft", ar: "الممرض/ة المتخصص/ة المؤهل/ة", cat: "👩‍⚕️ مهن",
-    sentence_de: "Als Pflegefachkraft ist man verantwortlich für die ganzheitliche Versorgung der Patienten, die Zusammenarbeit im interdisziplinären Team und die Anleitung von Auszubildenden.",
-    sentence_ar: "كممرض متخصص أنت مسؤول عن الرعاية الشاملة للمرضى والتعاون في الفريق متعدد التخصصات وتوجيه المتدربين."
-  },
-  {
-    de: "die Grundpflege", ar: "الرعاية التمريضية الأساسية", cat: "👩‍⚕️ مهن",
-    sentence_de: "Die Grundpflege umfasst die Körperpflege, Mobilisation, Ernährungsunterstützung und Lagerung des Patienten, wobei die Würde des Patienten stets gewahrt werden muss.",
-    sentence_ar: "تشمل الرعاية الأساسية النظافة الشخصية وتحريك المريض ودعم التغذية والتموضع، مع ضرورة الحفاظ على كرامة المريض دائماً."
-  },
+/* ============================================================
+   DATA
+============================================================ */
+const QUIZ_ALL = [
+  {type:'R',nr:'01',topic:'Hörbuch',answer:'Entspannen'},
+  {type:'R',nr:'02',topic:'Essverhalten',answer:'Kochen zusammen'},
+  {type:'R',nr:'03',topic:'Wochenende Zeitung',answer:'Andere Medien ergänzt'},
+  {type:'R',nr:'04',topic:'Handy in der Freizeit',answer:'Immer mit dem Handy beschäftigen'},
+  {type:'R',nr:'05',topic:'Rauchen / Zigaretten',answer:'Reaktion / sinken'},
+  {type:'R',nr:'06',topic:'Wichtig im Leben',answer:'Horizont'},
+  {type:'R',nr:'08',topic:'Verein (keine Zeit)',answer:'Die Tochter hat Hausaufgaben'},
+  {type:'R',nr:'09',topic:'Arbeitszeit',answer:'Kreativ'},
+  {type:'R',nr:'10',topic:'Freundlichkeit',answer:'Beruf'},
+  {type:'R',nr:'11',topic:'Fantasie im Arbeit',answer:'Aufgabe lösen'},
+  {type:'R',nr:'12',topic:'Verkaufsstrategie',answer:'Erleichterte Verhandlung'},
+  {type:'R',nr:'13',topic:'Reden über Ausflug',answer:'Das Zelt hat gute Qualität'},
+  {type:'R',nr:'14',topic:'Art des Essens ändern',answer:'Nimmt Kochkurse teil'},
+  {type:'R',nr:'15',topic:'Reiseblog',answer:'Über ihre Tiere'},
+  {type:'R',nr:'16',topic:'Spielwarenhandlung',answer:'Geschlossen'},
+  {type:'R',nr:'17',topic:'Lottospiel',answer:'Süchtig steigert'},
+  {type:'R',nr:'18',topic:'Stadt und Dorf',answer:'Sozialleben'},
+  {type:'F',nr:'01',topic:'Zucker Konsum, WHO',answer:'Essgewohnheiten verändern'},
+  {type:'F',nr:'02',topic:'Wohltätigkeitsorganisation',answer:'Mobiles Krankenhaus'},
+  {type:'F',nr:'03',topic:'2 Frauen kennen sich',answer:'Wollte Zeit für Reden'},
+  {type:'F',nr:'04',topic:'Stricken mit Händen',answer:'Entspannen während der Arbeit'},
+  {type:'F',nr:'05',topic:'Meerfahrt / Seereise',answer:'In Ruhe den See betrachten'},
+  {type:'F',nr:'06',topic:'Verhältnis alte Menschen',answer:'Angenehme Person'},
+  {type:'F',nr:'07',topic:'Behandlung',answer:'Das Verhalten ist richtig'},
+  {type:'F',nr:'08',topic:'Regel in der Gesellschaft',answer:'Konkurrenz zu groß'},
+  {type:'F',nr:'09',topic:'Deutsche Sprache verändern',answer:'Langer Zeitraum ändern'},
+  {type:'F',nr:'10',topic:'Erfahrung erste Arbeitstag',answer:'Erfolgreich'},
+  {type:'F',nr:'11',topic:'Praktikum Erfahrung',answer:'Selbst etwas zu schreiben'},
+  {type:'F',nr:'12',topic:'Kindergeburtstag Party',answer:'Allein organisieren'},
+  {type:'F',nr:'13',topic:'Glücksspiel',answer:'Süchtig steigert'},
+  {type:'F',nr:'14',topic:'Prinzip der Natur',answer:'Gesellschaft Gleichheit'},
+  {type:'F',nr:'15',topic:'Französische Sprache',answer:'Aufenthalt ins Ausland'},
+  {type:'F',nr:'16',topic:'Lebenshaltung Stadt',answer:'Bieten Wohnraum zu angemessenen Preisen'},
 ];
 
-const interviewData = [
-  {
-    badge: "❓ سؤال أساسي",
-    q_de: "Warum möchten Sie Pflegefachmann / Pflegefachfrau werden?",
-    q_ar: "لماذا تريد أن تصبح ممرضاً متخصصاً؟",
-    a_de: `Ich möchte Pflegefachmann werden, weil ich schon immer Menschen helfen wollte, die sich in einer schwierigen gesundheitlichen Situation befinden. Für mich ist die Pflege nicht nur ein Beruf, sondern eine Berufung, die viel Einfühlungsvermögen, Verantwortungsbewusstsein und Fachkompetenz erfordert.
-
-Besonders fasziniert mich, dass die Pflege so vielfältig ist – man arbeitet mit Patienten jeden Alters, in verschiedenen Fachbereichen und immer wieder in neuen Situationen. Diese Abwechslung und die Möglichkeit, täglich einen direkten positiven Einfluss auf das Wohlbefinden anderer Menschen zu haben, motivieren mich sehr.
-
-Außerdem ist mir wichtig, einen sicheren und zukunftsfähigen Beruf zu wählen, in dem Fachkräfte dringend gebraucht werden und in dem ich mich langfristig weiterentwickeln kann.`,
-    a_ar: `أريد أن أصبح ممرضاً لأنني أريد دائماً مساعدة الناس الذين يمرون بظروف صحية صعبة. بالنسبة لي، التمريض ليس مجرد مهنة بل رسالة تتطلب تعاطفاً كبيراً وإحساساً بالمسؤولية وكفاءة مهنية.
-    
-ما يأسرني بشكل خاص هو أن التمريض متنوع جداً — فأنت تعمل مع مرضى من جميع الأعمار وفي مجالات مختلفة ودائماً في مواقف جديدة. هذا التنوع وإمكانية التأثير الإيجابي المباشر على صحة الآخرين يحفّزانني كثيراً.`,
-    tip: "💡 نصيحة: تحدّث عن سبب شخصي أو تجربة أثّرت فيك، هذا يجعل إجابتك أكثر صدقاً وتأثيراً."
-  },
-  {
-    badge: "💪 نقاط القوة",
-    q_de: "Was sind Ihre persönlichen Stärken, die Sie für diesen Beruf geeignet machen?",
-    q_ar: "ما هي نقاط قوتك الشخصية التي تجعلك مناسباً لهذه المهنة؟",
-    a_de: `Ich würde sagen, dass meine größten Stärken mein Einfühlungsvermögen, meine Belastbarkeit und meine ausgeprägte Teamfähigkeit sind.
-
-Einfühlungsvermögen ist in der Pflege unerlässlich, weil Patienten oft in einer sehr verletzlichen Situation sind und sich verstanden und respektiert fühlen müssen. Ich kann gut auf die Bedürfnisse anderer eingehen und ruhig kommunizieren, auch wenn die Situation emotional belastend ist.
-
-Belastbarkeit ist ebenfalls wichtig, da der Pflegealltag häufig stressreich ist, besonders bei Personalengpässen oder in Notfallsituationen. Ich habe gelernt, unter Druck strukturiert zu arbeiten und Prioritäten zu setzen.
-
-Außerdem lerne ich schnell und bin bereit, Verantwortung zu übernehmen. Ich bin zuverlässig, pünktlich und habe Freude daran, mein Wissen ständig zu erweitern.`,
-    a_ar: `أقول إن أبرز نقاط قوتي هي التعاطف، والقدرة على تحمّل الضغط، والعمل الجيد في الفريق.
-    
-التعاطف ضروري جداً في التمريض لأن المرضى يكونون غالباً في وضع ضعيف ويحتاجون أن يشعروا بالفهم والاحترام. البقاء هادئاً والعمل المنظم تحت الضغط كذلك أمر مهم في العمل التمريضي اليومي.`,
-    tip: "💡 نصيحة: لا تقل فقط 'أنا شخص طيب' — اذكر كل قوة مع مثال أو موقف حقيقي."
-  },
-  {
-    badge: "📚 الدراسة والأهداف",
-    q_de: "Warum haben Sie sich für diese Ausbildungseinrichtung entschieden?",
-    q_ar: "لماذا اخترت هذا المستشفى / هذه المؤسسة التدريبية تحديداً؟",
-    a_de: `Ich habe mich bewusst für Ihre Einrichtung entschieden, weil ich sehr viel Positives über die Qualität der Ausbildung und das engagierte Pflegeteam gehört habe. Mir war es wichtig, eine Ausbildungsstätte zu wählen, bei der ich nicht nur theoretisches Wissen erwerbe, sondern auch praktische Fähigkeiten in verschiedenen Fachbereichen entwickeln kann.
-
-Besonders angesprochen hat mich, dass Ihre Klinik einen guten Ruf für die Betreuung von Auszubildenden hat und dass die Praxisanleiter aktiv in die Ausbildung eingebunden sind. Ich glaube, dass eine gute Begleitung während der Ausbildung entscheidend ist, um die Kompetenzen zu entwickeln, die man als Pflegefachmann wirklich braucht.
-
-Außerdem liegt mir die regionale Verbundenheit am Herzen – ich möchte langfristig in dieser Region arbeiten und sehe Ihre Einrichtung als idealen Startpunkt für meine berufliche Karriere.`,
-    a_ar: `اخترت مؤسستكم بوعي لأنني سمعت الكثير من الإيجابيات عن جودة التدريب وفريق التمريض المتحمس. كان مهماً لي اختيار مكان تدريب لا أكتسب فيه فقط المعرفة النظرية بل أطوّر أيضاً مهارات عملية في مجالات مختلفة.`,
-    tip: "💡 نصيحة: ابحث عن المستشفى قبل المقابلة — اذكر شيئاً محدداً يميّزه مثل تخصص أو برنامج معين."
-  },
-  {
-    badge: "⚡ الضغط والتحديات",
-    q_de: "Wie gehen Sie mit stressigen Situationen oder emotionalen Belastungen im Pflegealltag um?",
-    q_ar: "كيف تتعامل مع المواقف المجهدة أو الضغط العاطفي في العمل التمريضي اليومي؟",
-    a_de: `Im Pflegealltag gehören stressige Situationen und emotionale Belastungen leider dazu, und ich glaube, es ist wichtig, einen gesunden Umgang damit zu entwickeln.
-
-Erstens priorisiere ich meine Aufgaben – ich schaue, welche Maßnahmen sofort notwendig sind und welche warten können. Das hilft mir, auch in hektischen Phasen den Überblick zu behalten.
-
-Zweitens halte ich eine offene Kommunikation im Team für entscheidend. Wenn ich merke, dass ich Unterstützung brauche, zögere ich nicht, Kollegen um Hilfe zu bitten. Pflege ist Teamarbeit, und niemand sollte alles alleine tragen.
-
-Was emotionale Situationen betrifft – zum Beispiel der Tod eines Patienten – versuche ich, professionelle Distanz zu halten, ohne die menschliche Seite zu verlieren. Ich nehme mir bewusst Zeit zur Reflexion, spreche mit Kollegen oder nutze Supervisionsangebote.
-
-In meiner Freizeit achte ich außerdem auf ausreichend Schlaf, Bewegung und Ausgleich, damit ich langfristig leistungsfähig und belastbar bleibe.`,
-    a_ar: `في العمل التمريضي اليومي، المواقف المجهدة جزء من الواقع، ومن المهم تطوير طريقة صحية للتعامل معها.
-    
-أُرتّب أولويات مهامي، وأحافظ على تواصل مفتوح مع الفريق وأطلب المساعدة عند الحاجة. بالنسبة للضغط العاطفي، أحاول الحفاظ على مسافة مهنية دون فقدان الجانب الإنساني، وأهتم بالتوازن في حياتي الشخصية.`,
-    tip: "💡 نصيحة: هذا السؤال يختبر نضجك المهني — أظهر وعيك الذاتي وقدرتك على الاعتناء بنفسك."
-  },
-  {
-    badge: "🔮 المستقبل",
-    q_de: "Wo sehen Sie sich in fünf Jahren nach Ihrer Ausbildung?",
-    q_ar: "أين ترى نفسك بعد خمس سنوات من إتمام تدريبك؟",
-    a_de: `Nach meiner Ausbildung zum Pflegefachmann möchte ich zunächst fundierte Berufserfahrung in der direkten Patientenversorgung sammeln und meine praktischen Fähigkeiten weiter vertiefen. Es ist mir wichtig, in der ersten Zeit eine solide Basis aufzubauen und die Abläufe in der Klinik gut kennenzulernen.
-
-Mittelfristig interessiere ich mich sehr für eine Fachweiterbildung – zum Beispiel im Bereich Intensivpflege oder in der Anästhesiepflege – weil ich dort komplexe medizinische Situationen besonders spannend finde.
-
-Langfristig könnte ich mir auch vorstellen, eine leitende Position zu übernehmen oder in der Praxisanleitung tätig zu sein, um mein Wissen an zukünftige Auszubildende weiterzugeben. Ich glaube, dass kontinuierliche Weiterbildung und persönliche Entwicklung in der Pflege unverzichtbar sind, um die bestmögliche Versorgungsqualität zu gewährleisten.`,
-    a_ar: `بعد إتمام تدريبي أريد أولاً اكتساب خبرة عملية متينة في رعاية المرضى المباشرة. على المدى المتوسط أودّ الحصول على تخصص مثل العناية المركزة أو تمريض التخدير.
-    
-على المدى البعيد أتخيل نفسي في دور قيادي أو في تدريب المتدربين الجدد لنقل خبرتي لهم.`,
-    tip: "💡 نصيحة: أظهر طموحاً واقعياً — ابدأ بالتعلم ثم الاستقرار ثم التطور. هذا يُثير إعجاب المقابلين."
-  },
+const THEMEN = [
+  {num:1,title:'Reisen zu verschiedenen Orten',answers:['Schwierigkeiten','Hat Arbeit','Südafrika in den Bergen','Selbstständig','Alle Daten','Fotojournalist']},
+  {num:2,title:'Ziel oder Willenskraft',answers:['Fokussieren','Selbst sich zweifeln','Interesse daran verloren','Sich bemühen','—','Starkes Ziel sein zu können']},
+  {num:3,title:'Elektrogeräte',answers:['Große Geräte','Verkehrsablauf ist umweltschäden','Festgelegte lokale Läden','Einführung nicht zurück','Die angemessene Größe','Einrichtung dargestellt werden (etwas Kreatives)']},
+  {num:4,title:'Musikstraße',answers:['Erlaubnis sich bemühen','Lernstoffe aufbauen','Aufmerksamkeit schenken','CD mit anderen Musikern','Volksmusikmarkt ist verändert','Beide sind wichtig']},
+  {num:5,title:'Arbeitsdruck',answers:['Kindheit','Sich Rat zu holen','Eigene Fähigkeiten glauben','Einschätzen','(Schlechte / Falsche) Entscheidung','Krankheiten zu ertragen']},
+  {num:6,title:'Klassische Musik',answers:['Er wollte nicht im Ausland → (Teuer)','Andere Rolle Austausch','Lesestücke oder Musikstücke','Ausdauer','Die Leute bezahlen nicht genug','Musik Alphabet buchstabieren']},
+  {num:7,title:'Erklärfilm machen',answers:['Leichter verstehen','Viel gelesen werden','Zufällig','Private Firma','Viele Informationen','Wenige Freizeit']},
+  {num:8,title:'Bibliothek',answers:['Beliebtheit / beliebt','Bessere und ruhige Lernatmosphäre','Selten','Kopierecht von Elektrobücher ist kompliziert','Mehrheit digitalisiert','Internetangebote']},
 ];
 
-let currentIndex = 0;
-let isFlipped = false;
-
-function updateCard() {
-  const v = vocab[currentIndex];
-  document.getElementById('fc-de').textContent = v.de;
-  document.getElementById('fc-ar').textContent = v.ar;
-  document.getElementById('fc-sentence-de').textContent = v.sentence_de;
-  document.getElementById('fc-sentence-ar').textContent = v.sentence_ar;
-  document.getElementById('fc-category').textContent = v.cat;
-  document.getElementById('fc-counter').textContent = `${currentIndex+1} / ${vocab.length}`;
-  document.getElementById('progress-bar').style.width = `${((currentIndex+1)/vocab.length)*100}%`;
-  const fc = document.getElementById('flashcard');
-  fc.classList.remove('flipped'); isFlipped = false;
-  fc.classList.add('pop'); setTimeout(() => fc.classList.remove('pop'), 300);
-}
-function flipCard() {
-  const fc = document.getElementById('flashcard');
-  isFlipped = !isFlipped; fc.classList.toggle('flipped', isFlipped);
-}
-function nextCard() { currentIndex = (currentIndex+1) % vocab.length; updateCard(); }
-function prevCard() { currentIndex = (currentIndex-1+vocab.length) % vocab.length; updateCard(); }
-
-// QUIZ
-let quizShuffled = [], quizIndex = 0, quizScore = 0;
-function startQuiz() {
-  quizShuffled = [...vocab].sort(() => Math.random()-.5);
-  quizIndex = 0; quizScore = 0;
-  document.getElementById('quiz-score').textContent = 0;
-  document.getElementById('quiz-total').textContent = vocab.length;
-  showQuizQuestion();
-}
-function showQuizQuestion() {
-  if (quizIndex >= quizShuffled.length) { quizIndex = 0; quizShuffled.sort(() => Math.random()-.5); }
-  const v = quizShuffled[quizIndex];
-  document.getElementById('quiz-word').textContent = v.de;
-  document.getElementById('quiz-sentence').textContent = v.sentence_de;
-  let opts = [v].concat([...vocab].filter(x=>x.de!==v.de).sort(()=>Math.random()-.5).slice(0,3)).sort(()=>Math.random()-.5);
-  const container = document.getElementById('quiz-options'); container.innerHTML = '';
-  opts.forEach(opt => {
-    const btn = document.createElement('button'); btn.className = 'quiz-opt';
-    btn.textContent = opt.ar;
-    btn.onclick = () => {
-      const correct = opt.de === v.de;
-      btn.classList.add(correct ? 'correct' : 'wrong');
-      if (correct) { quizScore++; document.getElementById('quiz-score').textContent = quizScore; }
-      else container.querySelectorAll('.quiz-opt').forEach(b => { if(b.textContent===v.ar) b.classList.add('correct'); });
-      container.querySelectorAll('.quiz-opt').forEach(b => b.disabled=true);
-      setTimeout(() => { quizIndex++; showQuizQuestion(); }, 1300);
-    };
-    container.appendChild(btn);
-  });
+/* ============================================================
+   UTILS
+============================================================ */
+function shuffle(arr){
+  const a=[...arr];
+  for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}
+  return a;
 }
 
-// LIST
-function buildList() {
-  const section = document.getElementById('list-section'); section.innerHTML = '';
-  const cats = [...new Set(vocab.map(v=>v.cat))];
-  cats.forEach(cat => {
-    const div = document.createElement('div'); div.className = 'list-category';
-    div.innerHTML = `<div class="list-cat-title">${cat}</div>`;
-    vocab.filter(v=>v.cat===cat).forEach(v => {
-      div.innerHTML += `<div class="list-item">
-        <div class="list-de">${v.de}</div>
-        <div class="list-ar">${v.ar}</div>
-        <div class="list-example">${v.sentence_de}<br><span style="color:#aaa">${v.sentence_ar}</span></div>
-      </div>`;
-    });
-    section.appendChild(div);
-  });
+/* ============================================================
+   TAB SWITCHING
+============================================================ */
+function switchSection(s){
+  document.querySelectorAll('.section').forEach(el=>el.classList.remove('active'));
+  document.querySelectorAll('.main-tab').forEach(el=>el.classList.remove('active'));
+  document.getElementById('sec-'+s).classList.add('active');
+  const idx = s==='quiz'?0:s==='cards'?1:s==='cards3'?2:3;
+  document.querySelectorAll('.main-tab')[idx].classList.add('active');
 }
 
-// INTERVIEW
-function buildInterview() {
-  const section = document.getElementById('interview-section');
-  section.innerHTML = '<h3>🎤 أسئلة المقابلة الكاملة — Vorstellungsgespräch</h3>';
-  interviewData.forEach(p => {
-    section.innerHTML += `<div class="interview-card">
-      <span class="interview-badge">${p.badge}</span>
-      <div class="interview-q-de">🇩🇪 ${p.q_de}</div>
-      <div class="interview-q-ar">🇲🇦 ${p.q_ar}</div>
-      <div class="interview-a-de">${p.a_de.replace(/\n\n/g,'<br><br>')}</div>
-      <div class="interview-a-ar">${p.a_ar.replace(/\n\n/g,'<br><br>')}</div>
-      <div class="interview-tip">${p.tip}</div>
+/* ============================================================
+   QUIZ LOGIC
+============================================================ */
+let qPool=shuffle(QUIZ_ALL), qRoundCards=[], qi=0;
+let qCorrect=0, qWrong=0, qRound=1;
+let rfAnswered=false, answered=false;
+
+function startRound(){
+  if(qPool.length===0) qPool=shuffle(QUIZ_ALL);
+  qRoundCards=qPool.splice(0,10);
+  qi=0; qCorrect=0; qWrong=0;
+  document.getElementById('q-result').classList.remove('vis');
+  document.getElementById('quiz-area').style.display='';
+  updateQScorebar();
+  renderQ();
+}
+function nextRound(){ qRound++; startRound(); }
+
+function updateQScorebar(){
+  document.getElementById('q-chip-round').textContent=`Runde ${qRound}`;
+  document.getElementById('q-chip-ok').textContent=`✅ ${qCorrect}`;
+  document.getElementById('q-chip-bad').textContent=`❌ ${qWrong}`;
+}
+function updateQProgress(){
+  const total=qRoundCards.length, pct=Math.round((qi/total)*100);
+  document.getElementById('q-prog-text').textContent=`Frage ${qi+1} von ${total}`;
+  document.getElementById('q-prog-pct').textContent=`${pct}%`;
+  document.getElementById('q-prog-fill').style.width=pct+'%';
+}
+
+function renderQ(){
+  if(qi>=qRoundCards.length){showQResult();return;}
+  rfAnswered=false; answered=false;
+  const q=qRoundCards[qi];
+  updateQProgress();
+  document.getElementById('quiz-area').innerHTML=`
+    <div class="question-card">
+      <div class="q-num">Nr. ${q.nr}</div>
+      <div class="q-topic">${q.topic}</div>
+      <div style="margin-top:20px;">
+        <div class="step-label">Schritt 1 — Richtig oder Falsch?</div>
+        <div class="rf-row">
+          <button class="rf-btn btn-r" id="btn-r" onclick="pickRF('R')"><span class="icon">✅</span><span class="lbl">Richtig</span></button>
+          <button class="rf-btn btn-f" id="btn-f" onclick="pickRF('F')"><span class="icon">❌</span><span class="lbl">Falsch</span></button>
+        </div>
+      </div>
+      <div class="step2" id="step2">
+        <div class="step-label" style="margin-top:18px;">Schritt 2 — Was ist die Antwort?</div>
+        <div class="options-grid" id="opt-grid"></div>
+      </div>
+      <div class="feedback" id="feedback"></div>
+      <button class="next-btn" id="next-btn" onclick="goNext()">Nächste Frage →</button>
     </div>`;
+}
+
+function pickRF(chosen){
+  if(rfAnswered)return;
+  rfAnswered=true;
+  const q=qRoundCards[qi];
+  const bR=document.getElementById('btn-r'), bF=document.getElementById('btn-f');
+  bR.disabled=true; bF.disabled=true;
+  if(chosen===q.type){
+    (chosen==='R'?bR:bF).classList.add('selected-correct');
+    showStep2();
+  } else {
+    (chosen==='R'?bR:bF).classList.add('selected-wrong');
+    (q.type==='R'?bR:bF).classList.add('selected-correct');
+    qWrong++; updateQScorebar();
+    setFeedback(false,`❌ Falsch! Es ist "${q.type==='R'?'Richtig':'Falsch'}" — Antwort: ${q.answer}`);
+    showNextBtn();
+  }
+}
+
+function showStep2(){
+  const q=qRoundCards[qi];
+  document.getElementById('step2').classList.add('visible');
+  const wrong=shuffle(QUIZ_ALL.filter(c=>c.answer!==q.answer));
+  const opts=shuffle([q.answer,...wrong.slice(0,3).map(c=>c.answer)]);
+  const grid=document.getElementById('opt-grid');
+  grid.innerHTML='';
+  opts.forEach(opt=>{
+    const b=document.createElement('button');
+    b.className='opt-btn'; b.textContent=opt;
+    b.onclick=()=>pickAnswer(b,opt,q.answer);
+    grid.appendChild(b);
   });
 }
 
-function switchTab(tab) {
-  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-  const tabs = ['flashcard','quiz','list','interview'];
-  document.querySelectorAll('.tab')[tabs.indexOf(tab)].classList.add('active');
-  ['flashcard-section','quiz-section','list-section','interview-section'].forEach(id => document.getElementById(id).style.display='none');
-  if (tab==='flashcard') { document.getElementById('flashcard-section').style.display='block'; }
-  else if (tab==='quiz') { document.getElementById('quiz-section').style.display='block'; startQuiz(); }
-  else if (tab==='list') { document.getElementById('list-section').style.display='block'; buildList(); }
-  else if (tab==='interview') { document.getElementById('interview-section').style.display='block'; buildInterview(); }
+function pickAnswer(btn,chosen,correct){
+  if(answered)return;
+  answered=true;
+  document.querySelectorAll('.opt-btn').forEach(b=>{b.disabled=true;if(b.textContent===correct)b.classList.add('correct');});
+  if(chosen===correct){btn.classList.add('correct');qCorrect++;setFeedback(true,'✅ Richtig! Sehr gut!');}
+  else{btn.classList.add('wrong');qWrong++;setFeedback(false,`❌ Falsch! Richtige Antwort: ${correct}`);}
+  updateQScorebar(); showNextBtn();
 }
 
-updateCard();
+function setFeedback(ok,msg){
+  const fb=document.getElementById('feedback');
+  fb.textContent=msg; fb.className='feedback '+(ok?'fb-ok':'fb-bad');
+}
+function showNextBtn(){
+  const nb=document.getElementById('next-btn');
+  nb.classList.add('vis');
+  if(qi===qRoundCards.length-1) nb.textContent='Ergebnis anzeigen 🏁';
+}
+function goNext(){qi++;renderQ();}
+
+function showQResult(){
+  document.getElementById('quiz-area').style.display='none';
+  const total=qRoundCards.length, pct=Math.round((qCorrect/total)*100);
+  document.getElementById('q-res-icon').textContent=pct>=90?'🏆':pct>=70?'🎉':pct>=50?'👍':'💪';
+  document.getElementById('q-res-pct').textContent=pct+'%';
+  document.getElementById('q-res-sub').textContent=`Du hast ${qCorrect} von ${total} Fragen richtig beantwortet.`;
+  document.getElementById('q-result').classList.add('vis');
+  document.getElementById('q-prog-fill').style.width='100%';
+  document.getElementById('q-prog-pct').textContent='100%';
+  document.getElementById('q-prog-text').textContent=`Runde ${qRound} abgeschlossen`;
+}
+
+/* ============================================================
+   KARTEIKARTEN LOGIC
+============================================================ */
+let cCards=[...THEMEN], cIdx=0, cFlipped=false;
+
+function renderCard(){
+  const c=cCards[cIdx], total=cCards.length;
+  cFlipped=false;
+  document.getElementById('fc').classList.remove('flipped');
+  document.getElementById('c-counter').textContent=`${cIdx+1} / ${total}`;
+  document.getElementById('c-prog-fill').style.width=`${((cIdx+1)/total)*100}%`;
+  document.getElementById('th-num').textContent=`Thema ${c.num}`;
+  document.getElementById('th-title').textContent=c.title;
+  document.getElementById('ans-list').innerHTML=c.answers.map((a,i)=>`
+    <div class="ans-item"><span class="ans-num">(${i+1})</span><span class="ans-text">${a}</span></div>`).join('');
+  document.getElementById('c-prev').disabled=cIdx===0;
+  document.getElementById('c-next').disabled=cIdx===total-1;
+  const w=document.getElementById('fc-wrap');
+  w.style.animation='none'; w.offsetHeight; w.style.animation='fadeUp .35s ease';
+}
+
+function flipCard(){
+  cFlipped=!cFlipped;
+  document.getElementById('fc').classList.toggle('flipped',cFlipped);
+}
+function prevCard(){if(cIdx>0){cIdx--;renderCard();}}
+function nextCard(){if(cIdx<cCards.length-1){cIdx++;renderCard();}}
+function doShuffle(){
+  for(let i=cCards.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[cCards[i],cCards[j]]=[cCards[j],cCards[i]];}
+  cIdx=0; renderCard();
+}
+
+/* ============================================================
+   TEIL 3 KARTEIKARTEN
+============================================================ */
+const THEMEN3 = [
+  {num:1,title:'Kinder Schule Zeiten',answers:['Lehrerin','Lehrerin','Herr Mann','Herr Mann','Moderatorin','Lehrerin']},
+  {num:2,title:'Zwei Gäste Arbeit',answers:['Arbeiter Student (Fabian)','Student hat ein Kind (David)','Moderatorin','Student hat ein Kind (David)','Student hat ein Kind (David)','Arbeiter Student (Fabian)']},
+  {num:3,title:'Reise in Gruppen oder Einzel',answers:['Journalist','Mädchen','Moderator','Mädchen','Mädchen','Journalist']},
+  {num:4,title:'Salz Nutzung in Deutschland',answers:['Ernährungsexpertin','Ernährungsexpertin','Arzt','Moderator','Ernährungsexpertin','Arzt']},
+  {num:5,title:'Wohnmöglichkeit – WG',answers:['Alte Frau','Alte Frau','Student','Moderator','Student','Student']},
+  {num:6,title:'Berufliche Selbstständige',answers:['Jung','Mädchen','Mädchen','Moderator','Jung','Mädchen']},
+];
+
+let c3Cards=[...THEMEN3], c3Idx=0, c3Flipped=false;
+
+function renderCard3(){
+  const c=c3Cards[c3Idx], total=c3Cards.length;
+  c3Flipped=false;
+  document.getElementById('fc3').classList.remove('flipped');
+  document.getElementById('c3-counter').textContent=`${c3Idx+1} / ${total}`;
+  document.getElementById('c3-prog-fill').style.width=`${((c3Idx+1)/total)*100}%`;
+  document.getElementById('th3-num').textContent=`Thema ${c.num}`;
+  document.getElementById('th3-title').textContent=c.title;
+  document.getElementById('ans3-list').innerHTML=c.answers.map((a,i)=>`
+    <div class="ans-item"><span class="ans-num">(${i+1})</span><span class="ans-text">${a}</span></div>`).join('');
+  document.getElementById('c3-prev').disabled=c3Idx===0;
+  document.getElementById('c3-next').disabled=c3Idx===total-1;
+  const w=document.getElementById('fc3-wrap');
+  w.style.animation='none'; w.offsetHeight; w.style.animation='fadeUp .35s ease';
+}
+function flipCard3(){c3Flipped=!c3Flipped;document.getElementById('fc3').classList.toggle('flipped',c3Flipped);}
+function prevCard3(){if(c3Idx>0){c3Idx--;renderCard3();}}
+function nextCard3(){if(c3Idx<c3Cards.length-1){c3Idx++;renderCard3();}}
+function doShuffle3(){
+  for(let i=c3Cards.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[c3Cards[i],c3Cards[j]]=[c3Cards[j],c3Cards[i]];}
+  c3Idx=0; renderCard3();
+}
+
+/* ============================================================
+   TEIL 4 KARTEIKARTEN
+============================================================ */
+const THEMEN4 = [
+  {
+    num:1,
+    title:'Zeitarbeit',
+    answers:[
+      'Zeitarbeit versteht (3 Beispiele)',
+      'Überstunde → unproduktiv (sinkt)',
+      'Möglichkeiten → gute Atmosphäre verbessert',
+      'Gute oder bessere Chance (Berufsaufstieg)',
+      'Fähigkeit (besser trainiert)',
+      'Aufgeschlossen (gegenüber Veränderungen)',
+      'Arbeitsplatz (sichere Zukunft)',
+      'Kritik → Widerlegen (Fakten)',
+    ]
+  },
+  {
+    num:2,
+    title:'Glück',
+    answers:[
+      'Glück ist beeinflussbar',
+      'Beziehungseffekt → einzeln / individuell',
+      'Kindereffekt → begrenzt',
+      'Lottospiel → Lebenskrise auslösen',
+      'Geld → weniger beeinflusst',
+      'Sinnvolle Tätigkeit (Sport, Selbstpflege)',
+      'Voraussetzung → gebildete Personen',
+      'Mehr Achtsamkeit im Alltag',
+    ]
+  },
+  {
+    num:3,
+    title:'Kaffee',
+    answers:[
+      'Kaffeeeffekt → widersprüchlich',
+      'Kaffeeeffekt Studieren → kaum vergleichbar',
+      'Macht wach → Blutdruck steigt',
+      'Importverbot → finanzielle Verluste',
+      'Kaffeetasse Konsum → maßvoll (2–3 Tassen)',
+      'Typ-II-Diabetes → eine Tasse jeder Art',
+      'Alte Methode (als Heilmittel)',
+      'Fressfeind schützt Kaffeepflanzen',
+    ]
+  },
+  {
+    num:4,
+    title:'Am Rand der Stadt',
+    answers:[
+      'In einem Dorf',
+      'Ruhig (liebt Stille)',
+      'Musikkurs (Trompete)',
+      'Nervig (Familie findet ihn störend)',
+      'Fuß zur Arbeit gehen',
+      'Perfekter Film im Hintergrund',
+      'Einfachheit / Zeit mit Freunden',
+      'Lädt Leute ein → kaufen selbst hergestellte Produkte',
+    ]
+  },
+  {
+    num:5,
+    title:'Blogger als Beruf',
+    answers:[
+      'Er möchte sie nicht wegwerfen',
+      'Sein Arbeitsziel → Nebentätigkeit',
+      'Sein Erfolgsgeheimnis → ständig mit Menschen Kontakt',
+      'Woher hatte er die Informationen? → andere Firmen',
+      'Geld verdienen → zahlreiche Webseitenbesucher',
+      'Webseite Steuer → Reingewinn',
+      'Informativ',
+      'Menschen vertrauen → enge Beziehung',
+    ]
+  },
+];
+
+let c4Cards=[...THEMEN4], c4Idx=0, c4Flipped=false;
+
+function renderCard4(){
+  const c=c4Cards[c4Idx], total=c4Cards.length;
+  c4Flipped=false;
+  document.getElementById('fc4').classList.remove('flipped');
+  document.getElementById('c4-counter').textContent=`${c4Idx+1} / ${total}`;
+  document.getElementById('c4-prog-fill').style.width=`${((c4Idx+1)/total)*100}%`;
+  document.getElementById('th4-num').textContent=`Thema ${c.num}`;
+  document.getElementById('th4-title').textContent=c.title;
+  document.getElementById('ans4-list').innerHTML=c.answers.map((a,i)=>`
+    <div class="ans-item"><span class="ans-num">(${i+1})</span><span class="ans-text">${a}</span></div>`).join('');
+  document.getElementById('c4-prev').disabled=c4Idx===0;
+  document.getElementById('c4-next').disabled=c4Idx===total-1;
+  const w=document.getElementById('fc4-wrap');
+  w.style.animation='none'; w.offsetHeight; w.style.animation='fadeUp .35s ease';
+}
+function flipCard4(){c4Flipped=!c4Flipped;document.getElementById('fc4').classList.toggle('flipped',c4Flipped);}
+function prevCard4(){if(c4Idx>0){c4Idx--;renderCard4();}}
+function nextCard4(){if(c4Idx<c4Cards.length-1){c4Idx++;renderCard4();}}
+function doShuffle4(){
+  for(let i=c4Cards.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[c4Cards[i],c4Cards[j]]=[c4Cards[j],c4Cards[i]];}
+  c4Idx=0; renderCard4();
+}
+
+/* ============================================================
+   INIT
+============================================================ */
+startRound();
+renderCard();
+renderCard3();
+renderCard4();
 </script>
 </body>
 </html>
